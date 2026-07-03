@@ -17,8 +17,8 @@
 *.qm
 .#*
 *.*#
-core
-!core/
+#core
+#!core/
 tags
 .DS_Store
 .directory
