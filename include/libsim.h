@@ -1,12 +1,7 @@
-#ifndef LIBSIM_H
-#define LIBSIM_H
+#pragma once
 
 #include "libsim_global.h"
-
-class LIBSIM_EXPORT Libsim
-{
-public:
-    Libsim();
-};
-
-#endif // LIBSIM_H
+#include "input.h"
+#include "base.h"
+#include "logic_states.h"
+#include "object_template.h"

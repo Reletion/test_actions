@@ -16,4 +16,12 @@
 #define LIBSIM_EXPORT Q_DECL_IMPORT
 #endif
 
+#include <cstddef>
+
+namespace libsim{
+	namespace base{
+		using ID_t=std::size_t;
+	}
+}
+
 #endif // LIBSIM_GLOBAL_H
