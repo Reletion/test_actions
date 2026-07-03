@@ -2,11 +2,14 @@
 
 #Versions
 LIBRARY_VERSION="0.0.1"
-SCRIPT_VERSION="0.1"
+SCRIPT_VERSION="0.3"
+
+#Flags
+BUILD_TESTS=${1:-"-b"}
 
 #Directories
 
-WORKING_DIRECTORY=${1:-".."}
+WORKING_DIRECTORY=${2:-".."}
 BUILD_DIRECTORY="$WORKING_DIRECTORY/build"
 TMP_DIR="$BUILD_DIRECTORY/output"
 API_DIR="$TMP_DIR/.cmake/api/v1"
@@ -20,10 +23,9 @@ RED="\033[31m"
 GREEN="\033[32m"
 YELLOW="\033[33m"
 
-
-CMAKE_ARGS=("$@")
+ALL=($@)
+CMAKE_ARGS=${ALL[@]:3}
 set -e
-
 
 #Show help
 
@@ -37,10 +39,19 @@ case "$1" in
 
 	Usage:
 	        bash build.sh [OPTIONS]
-	        bash build.sh [WORKING DIRECTORY=".."] [CMAKE ARGUMENTS]
+	        bash build.sh [-b|-p] [WORKING DIRECTORY=".."] [CMAKE ARGUMENTS]
 	OPTIONS:
-	        -h, --help 	print help
-	        -v, --version	print version of script and library
+	        -h, --help 		print help
+	        -v, --version		print version of script and library
+	ARGUMENTS:
+		[-b|-p]			flag of building tests
+					-b build all tests
+					-p pass building
+					default: -b
+
+		[WORKING DIRECTORY]	working directory (default: "..")
+
+		[CMAKE ARGUMENTS]	arguments for cmake building the library
 	===========================================================
 	EOF
 	exit 0
@@ -55,6 +66,16 @@ case "$1" in
 	==================================
 	EOF
 	exit 0
+	;;
+esac
+
+
+case "$BUILD_TESTS" in
+	"-b"|"-p")
+	;;
+	*)
+		echo -e "${BOLD}${RED}Cannot recognize $BUILD_TESTS"
+		exit 1
 	;;
 esac
 
@@ -129,7 +150,7 @@ echo -e "${YELLOW}Creating temporary build directory in $TMP_DIR${NC}\n"
 mkdir -p $TMP_DIR
 
 #Configuring project
-
+echo "${CMAKE_ARGS[@]}"
 echo -e "${YELLOW}Configuring cmake${NC}\n"
 
 mkdir -p "$API_DIR/query"
@@ -161,4 +182,18 @@ mkdir $FINAL_DIRECTORY
 
 mv $TMP_DIR $FINAL_DIRECTORY
 
-echo -e "${BOLD}${GREEN}Project is built in $FINAL_DIRECTORY${NC}"
+echo -e "${BOLD}${GREEN}Project is built in $FINAL_DIRECTORY${NC}\n"
+
+echo -e "${YELLOW}Coping library into tests directory${NC}\n"
+cp ${FINAL_DIRECTORY}/output/*.so "${WORKING_DIRECTORY}/tests"
+cp ${FINAL_DIRECTORY}/output/*.a "${WORKING_DIRECTORY}/tests"
+
+echo -e "${BOLD}${GREEN}Project is copied in ${WORKING_DIRECTORY}/tests${NC}\n"
+
+#Building tests
+case "$BUILD_TESTS" in
+	"-b")
+		echo -e "${YELLOW}Building tests${NC}\n\n"
+		bash ./build_tests.sh
+	;;
+esac

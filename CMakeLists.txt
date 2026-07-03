@@ -2,16 +2,16 @@ cmake_minimum_required(VERSION 3.16)
 
 project(libsim LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(HEADERS_DIRECTORY "./include")
 set(SRC_DIRECTORY "./src/core")
+set(LIB_DIRECTORY "./lib")
 
 set(SOURCE_FILES
-  ${HEADERS_DIRECTORY}/libsim_global.h
-  ${SRC_DIRECTORY}/libsim.cpp
-  ${HEADERS_DIRECTORY}/libsim.h
+  ${SRC_DIRECTORY}/base.cpp
+  ${SRC_DIRECTORY}/input.cpp
 )
 
 # add_library(libsim SHARED
@@ -28,6 +28,7 @@ foreach(target IN LISTS TARGETS)
   target_include_directories( ${target} PRIVATE
     ${HEADERS_DIRECTORY}
     ${SRC_DIRECTORY}
+    ${LIB_DIRECTORY}
   )
 
   target_compile_definitions(${target} PRIVATE LIBSIM_LIBRARY)
