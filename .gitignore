@@ -17,8 +17,8 @@
 *.qm
 .#*
 *.*#
-#core
-#!core/
+core
+!core/
 tags
 .DS_Store
 .directory
@@ -84,3 +84,4 @@ CMakeLists.txt.user*
 
 # Temporary build paths
 /build/
+/tests/build/
