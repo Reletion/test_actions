@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 
 
 include(CMakePackageConfigHelpers)
-include(GNUInstallDirs)
+#include(GNUInstallDirs)
 
 project(libsim LANGUAGES CXX)
 
@@ -12,9 +12,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(HEADERS_DIRECTORY "./include")
 set(SRC_DIRECTORY "./src")
 set(LIB_DIRECTORY "./lib")
-set(BUILD_DIRECTORY "${CMAKE_INSTALL_LIBDIR}/libsim")
-
-message(STATUS ${CMAKE_PREFIX_PATH})
+#set(BUILD_DIRECTORY "${CMAKE_INSTALL_LIBDIR}/libsim")
+set(BUILD_DIRECTORY "./" )
+set(LIB_INSTALL_DIR "${BUILD_DIRECTORY}/bin/libsim")
 
 set(SOURCE_FILES
   ${SRC_DIRECTORY}/core/base.cpp
@@ -46,11 +46,11 @@ foreach(target IN LISTS TARGETS)
 
   install(TARGETS ${target}
 	EXPORT "${target}_lib"
-	LIBRARY DESTINATION ${BUILD_DIRECTORY}
-	ARCHIVE DESTINATION ${BUILD_DIRECTORY}
-	RUNTIME DESTINATION ${BUILD_DIRECTORY}
-	INCLUDES DESTINATION ${HEADERS_DIRECTORY}
-	INCLUDES DESTINATION ${LIB_DIRECTORY}
+	LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+	ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
+	RUNTIME DESTINATION ${LIB_INSTALL_DIR}
+	#INCLUDES DESTINATION ${HEADERS_DIRECTORY}
+	#INCLUDES DESTINATION ${LIB_DIRECTORY}
   )
 
   install(DIRECTORY ${HEADERS_DIRECTORY}/ DESTINATION ${BUILD_DIRECTORY}/include)
@@ -58,26 +58,25 @@ foreach(target IN LISTS TARGETS)
 
   install(EXPORT "${target}_lib"
 	FILE "${target}_lib.cmake"
-	DESTINATION ${BUILD_DIRECTORY}
+	DESTINATION ${LIB_INSTALL_DIR}/cmake
   )
 
   write_basic_package_version_file(
-	"${CMAKE_CURRENT_BINARY_DIR}/${target}ConfigVersion.cmake"
+	"${target}ConfigVersion.cmake"
 	VERSION 0.0.1
 	COMPATIBILITY SameMajorVersion
   )
 
    configure_package_config_file(
 	"${target}_libConfig.cmake.in"
-	"${CMAKE_CURRENT_BINARY_DIR}/${target}Config.cmake"
-	INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/libsim
-	PATH_VARS CMAKE_INSTALL_INCLUDEDIR
+	"${target}Config.cmake"
+	INSTALL_DESTINATION ${LIB_INSTALL_DIR}/cmake
    )
 
    install(FILES
 	"${CMAKE_CURRENT_BINARY_DIR}/${target}Config.cmake"
 	"${CMAKE_CURRENT_BINARY_DIR}/${target}ConfigVersion.cmake"
-	DESTINATION ${CMAKE_INSTALL_LIBDIR}/libsim
+	DESTINATION ${LIB_INSTALL_DIR}/cmake
    )
 
    target_compile_definitions(${target} PRIVATE LIBSIM_LIBRARY)
