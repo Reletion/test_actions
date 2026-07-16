@@ -1,0 +1,4 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/libsim_static_lib.cmake")
+check_required_components(libsim_static)

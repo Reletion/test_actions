@@ -12,6 +12,7 @@ BUILD_TESTS=${1:-"-b"}
 WORKING_DIRECTORY=${2:-".."}
 BUILD_DIRECTORY="$WORKING_DIRECTORY/build"
 TMP_DIR="$BUILD_DIRECTORY/output"
+INSTALL_DIR="$TMP_DIR/libsim"
 API_DIR="$TMP_DIR/.cmake/api/v1"
 required_utilities=("cmake" "jq")
 
@@ -162,7 +163,11 @@ cmake -S $WORKING_DIRECTORY -B $TMP_DIR "${CMAKE_ARGS[@]}"
 
 echo -e "${YELLOW}\nBuilding project ...\n${NC}"
 
+mkdir -p "${TMP_DIR}/libsim"
+
 cmake --build $TMP_DIR
+
+cmake --install $TMP_DIR --prefix "${TMP_DIR}/libsim"
 
 REPLY_DIR="$API_DIR/reply"
 REPLY_FILE=$(ls $REPLY_DIR/toolchains-v1-*.json 2>/dev/null | head -n 1)
@@ -178,15 +183,18 @@ if [ -d $FINAL_DIRECTORY ]; then
 	rm -rf $FINAL_DIRECTORY
 fi
 
+#Coping project
 mkdir $FINAL_DIRECTORY
 
-mv $TMP_DIR $FINAL_DIRECTORY
+mv $INSTALL_DIR $FINAL_DIRECTORY
+rm -r $TMP_DIR
 
 echo -e "${BOLD}${GREEN}Project is built in $FINAL_DIRECTORY${NC}\n"
 
+#Coping projects into tests
 echo -e "${YELLOW}Coping library into tests directory${NC}\n"
-cp ${FINAL_DIRECTORY}/output/*.so "${WORKING_DIRECTORY}/tests"
-cp ${FINAL_DIRECTORY}/output/*.a "${WORKING_DIRECTORY}/tests"
+cp -rf ${FINAL_DIRECTORY}/libsim "${WORKING_DIRECTORY}/tests/lib"
+#cp ${FINAL_DIRECTORY}/libsim/*.a "${WORKING_DIRECTORY}/tests"
 
 echo -e "${BOLD}${GREEN}Project is copied in ${WORKING_DIRECTORY}/tests${NC}\n"
 

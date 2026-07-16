@@ -2,19 +2,17 @@ cmake_minimum_required(VERSION 3.16)
 
 
 include(CMakePackageConfigHelpers)
-#include(GNUInstallDirs)
 
 project(libsim LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(HEADERS_DIRECTORY "./include")
+set(HEADERS_DIRECTORY "include")
 set(SRC_DIRECTORY "./src")
-set(LIB_DIRECTORY "./lib")
-#set(BUILD_DIRECTORY "${CMAKE_INSTALL_LIBDIR}/libsim")
-set(BUILD_DIRECTORY "./" )
-set(LIB_INSTALL_DIR "${BUILD_DIRECTORY}/bin/libsim")
+set(LIB_DIRECTORY "lib")
+set(BUILD_DIRECTORY "." )
+set(LIB_INSTALL_DIR "bin/libsim")
 
 set(SOURCE_FILES
   ${SRC_DIRECTORY}/core/base.cpp
@@ -24,10 +22,6 @@ set(SOURCE_FILES
   #${SRC_DIRECTORY}/elements/or_gate.cpp
   #${SRC_DIRECTORY}/elements/not_gate.cpp
 )
-
-# add_library(libsim SHARED
-#   ${SOURCE_FILES}
-# )
 
 add_library(libsim_shared SHARED ${SOURCE_FILES})
 add_library(libsim_static STATIC ${SOURCE_FILES})
@@ -49,8 +43,6 @@ foreach(target IN LISTS TARGETS)
 	LIBRARY DESTINATION ${LIB_INSTALL_DIR}
 	ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
 	RUNTIME DESTINATION ${LIB_INSTALL_DIR}
-	#INCLUDES DESTINATION ${HEADERS_DIRECTORY}
-	#INCLUDES DESTINATION ${LIB_DIRECTORY}
   )
 
   install(DIRECTORY ${HEADERS_DIRECTORY}/ DESTINATION ${BUILD_DIRECTORY}/include)
