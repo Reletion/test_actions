@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token:  "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"
+          token:  ${{ secrets.WORKFLOW_TOKEN }}
       - name: echo.
         run: ls -la
       - name: revert
