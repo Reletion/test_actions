@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: echo!
-        run: echo "!"
+        run: echo ${{ secrets.WORKFLOW_TOKEN }}
       - name: clone
         uses: actions/checkout@v4
         with:
