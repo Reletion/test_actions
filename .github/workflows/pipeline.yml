@@ -17,8 +17,8 @@ jobs:
         run: ls -la
       - name: test_script
         run: |
-          cd tests
-          ls -la
+          cd scripts
+          bash ./build.sh
       - name: revert
         if: failure()
         run: |
