@@ -15,6 +15,10 @@ jobs:
           token:  ${{ secrets.GITHUB_TOKEN }}
       - name: echo.
         run: ls -la
+      - name: test_script
+        run: |
+          cd tests
+          ./build.sh
       - name: revert
         if: failure()
         run: |
