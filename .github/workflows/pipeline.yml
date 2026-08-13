@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: echo!
-        run: echo ${{ secrets.WORKFLOW_TOKEN }}
+        run: echo "!"
       - name: clone
         uses: actions/checkout@v4
         with:
@@ -16,7 +16,7 @@ jobs:
       - name: echo.
         run: ls -la
       - name: revert
-        if: success()
+        if: failure()
         run: |
           git config --global user.email "mrbogdanello@gmail.com"
           git config --global user.name "PipeLine"
