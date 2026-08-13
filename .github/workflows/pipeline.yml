@@ -15,5 +15,7 @@ jobs:
       - name: revert
         if: success()
         run: |
+          git config --global user.email "mrbogdanello@gmail.com"
+          git config --global user.name "PipeLine"
           git revert HEAD
           git push
