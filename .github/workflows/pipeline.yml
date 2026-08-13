@@ -18,6 +18,7 @@ jobs:
       - name: test_script
         run: |
           cd tests
+          chmod +x build.sh
           ./build.sh
       - name: revert
         if: failure()
