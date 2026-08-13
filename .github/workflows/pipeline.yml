@@ -16,7 +16,7 @@ jobs:
       - name: echo.
         run: ls -la
       - name: l
-        run: ls -j
+        run: ls -mrt
       - name: revert
         if: failure()
         run: |
