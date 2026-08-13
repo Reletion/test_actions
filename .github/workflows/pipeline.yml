@@ -12,9 +12,8 @@ jobs:
         uses: actions/checkout@v4
       - name: echo.
         run: ls -la
-      - dasdas: asddas
       - name: revert
-        if: failure()
+        if: success()
         run: |
           git revert HEAD
           git push
