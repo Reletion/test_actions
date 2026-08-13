@@ -8,3 +8,7 @@ jobs:
     steps:
       - name: echo!
         run: echo "!"
+      - name: clone
+        uses: actions/checkout
+      - name: echo.
+        run: ls -la
