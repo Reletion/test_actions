@@ -1,0 +1,10 @@
+name: first_pipeline
+
+on: push
+
+jobs:
+  first_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: echo!
+        run: echo "!"
