@@ -13,6 +13,7 @@ namespace libsim{
 				static std::byte eval(std::vector<input> inputs);
 
 				template<typename T>
+				requires std::is_base_of_v<Network, T>
 				consteval static T& return_network(){
 					return T::convert_to(boolean_vector);
 				}
