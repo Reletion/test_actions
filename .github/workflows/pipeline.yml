@@ -15,8 +15,6 @@ jobs:
           token:  ${{ secrets.GITHUB_TOKEN }}
       - name: echo.
         run: ls -la
-      - name: l
-        run: ls -j
       - name: revert
         if: failure()
         run: |
