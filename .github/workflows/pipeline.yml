@@ -27,6 +27,6 @@ jobs:
         run: |
           git config --global user.email "mrbogdanello@gmail.com"
           git config --global user.name "PipeLine"
-          git revert ${{ github.event.before }}
+          git reset --hard ${{ github.event.before }}
           git push --force-with-lease
 ##
