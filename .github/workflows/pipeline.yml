@@ -21,9 +21,8 @@ jobs:
           bash ./build.sh
       - name: test_ctest
         run: |
-          pwd
-          #cd ../tests/build
-          #ctest
+          cd /tests/build
+          ctest
       - name: revert
         if: failure()
         run: |
