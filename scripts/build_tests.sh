@@ -1,6 +1,9 @@
+#!/usr/bin/env bash
+
 WORKING_DIRECTORY="${1:-../tests}"
 BUILD_DIRECTORY="$WORKING_DIRECTORY/build"
-CMAKE_ARGS=("$@")
+
+CMAKE_ARGS=${@:2}
 
 NC="\033[0m"
 BOLD="\033[1m"
@@ -14,7 +17,7 @@ echo -e "${BOLD}${YELLOW}Starting script...${NC}\n"
 
 mkdir -p $BUILD_DIRECTORY
 
-cmake -S $WORKING_DIRECTORY -B $BUILD_DIRECTORY
-cmake --build $BUILD_DIRECTORY "${CMAKE_ARGS[@]}"
+cmake ${CMAKE_ARGS[@]} -B $BUILD_DIRECTORY -S $WORKING_DIRECTORY 
+cmake --build $BUILD_DIRECTORY
 
 echo -e "\n\n${BOLD}${GREEN}Tests are built${NC}\n"

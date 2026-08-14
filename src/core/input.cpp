@@ -1,4 +1,5 @@
 #include "input.h"
+#include "logic_states.h"
 
 namespace libsim{
 	namespace core{
@@ -9,7 +10,7 @@ namespace libsim{
 			this->id = id;
 		}
 		void input::set_const(Logic_states state){
-			id = state;
+			id = static_cast<base::ID_t>(state);
 		}
 	}
 }

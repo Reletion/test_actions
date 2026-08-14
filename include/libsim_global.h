@@ -1,19 +1,18 @@
-#ifndef LIBSIM_GLOBAL_H
-#define LIBSIM_GLOBAL_H
+#pragma once
 
 #if defined(_MSC_VER) || defined(WIN64) || defined(_WIN64) || defined(__WIN64__) || defined(WIN32) \
     || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
-#define Q_DECL_EXPORT __declspec(dllexport)
-#define Q_DECL_IMPORT __declspec(dllimport)
+#define DECL_EXPORT __declspec(dllexport)
+#define DECL_IMPORT __declspec(dllimport)
 #else
-#define Q_DECL_EXPORT __attribute__((visibility("default")))
-#define Q_DECL_IMPORT __attribute__((visibility("default")))
+#define DECL_EXPORT __attribute__((visibility("default")))
+#define DECL_IMPORT __attribute__((visibility("default")))
 #endif
 
 #if defined(LIBSIM_LIBRARY)
-#define LIBSIM_EXPORT Q_DECL_EXPORT
+#define LIBSIM_EXPORT DECL_EXPORT
 #else
-#define LIBSIM_EXPORT Q_DECL_IMPORT
+#define LIBSIM_EXPORT DECL_IMPORT
 #endif
 
 #include <cstddef>
@@ -21,7 +20,6 @@
 namespace libsim{
 	namespace base{
 		using ID_t=std::size_t;
+		using byte=unsigned char;
 	}
 }
-
-#endif // LIBSIM_GLOBAL_H

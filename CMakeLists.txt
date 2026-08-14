@@ -21,6 +21,7 @@ set(SOURCE_FILES
  # ${SRC_DIRECTORY}/elements/and_gate.cpp
   #${SRC_DIRECTORY}/elements/or_gate.cpp
   #${SRC_DIRECTORY}/elements/not_gate.cpp
+#  ${SRC_DIRECTORY}/core/truth_table_utils.cpp
 )
 
 add_library(libsim_shared SHARED ${SOURCE_FILES})

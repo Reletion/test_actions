@@ -3,7 +3,7 @@
 #include "libsim_global.h"
 
 namespace libsim{
-	namespace base{
+	namespace info{
 		void print_info();
 	}
 }

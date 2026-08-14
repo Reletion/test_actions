@@ -1,8 +1,10 @@
+#!/usr/bin/env bash
+
 #BASH SCRIPT FOR BUILDING LIBSIM PROJECT
 
 #Versions
 LIBRARY_VERSION="0.0.1"
-SCRIPT_VERSION="0.3"
+SCRIPT_VERSION="0.5"
 
 #Flags
 BUILD_TESTS=${1:-"-b"}
@@ -24,8 +26,7 @@ RED="\033[31m"
 GREEN="\033[32m"
 YELLOW="\033[33m"
 
-ALL=($@)
-CMAKE_ARGS=${ALL[@]:3}
+CMAKE_ARGS=${@:3}
 set -e
 
 #Show help
@@ -39,8 +40,8 @@ case "$1" in
 	build.sh is a script for building libsim library with cmake
 
 	Usage:
-	        bash build.sh [OPTIONS]
-	        bash build.sh [-b|-p] [WORKING DIRECTORY=".."] [CMAKE ARGUMENTS]
+	        build.sh [OPTIONS]
+	        build.sh [-b|-p] [WORKING DIRECTORY=".."] [CMAKE ARGUMENTS]
 	OPTIONS:
 	        -h, --help 		print help
 	        -v, --version		print version of script and library
@@ -60,7 +61,7 @@ case "$1" in
 
 	-v|--version)
 
-	cat<<-EOF 
+	cat<<-EOF
 	==================================
 	Library version: $LIBRARY_VERSION
 	Script version: $SCRIPT_VERSION
@@ -92,28 +93,25 @@ fi
 
 echo "Distro name: $DISTRO"
 
-case "$DISTRO" in
-	ubuntu|debian|linuxmint|kali|astra*)
-		PACKAGE_MANAGER=apt
-		INSTALL_COMMAND=install
-	;;
-#	fedora|centos|rhel|almalinux|rocky)
-#		PACKAGE_MANAGER=dnf
-#	;;
-#	arch|manjaro|endeavouros)
-#		PACKAGE_MANAGER=pacman
-#	;;
-#	opensuse*)
-#		PACKAGE_MANAGER=zypper
-#	;;
-#	altlinux)
-#		PACKAGE_MANAGER=apt
-#	;;
-	*)
-		echo "Cannot specify package manager"
-		exit 1
-	;;
-esac
+if command -v apt &> /dev/null; then
+	PACKAGE_MANAGER=apt
+	INSTALL_COMMAND=install
+elif command -v dnf &> /dev/null; then
+	PACKAGE_MANAGER=dnf
+	INSTALL_COMMAND=install
+elif command -v yum &> /dev/null; then
+	PACKAGE_MANAGER=yum
+	INSTALL_COMMAND=install
+elif command -v pacman &> /dev/null; then
+	PACKAGE_MANAGER=pacman
+	INSTALL_COMMAND=-S
+elif command -v zypper &> /dev/null; then
+	PACKAGE_MANAGER=zypper
+	INSTALL_COMMAND=install
+else
+	echo -e "${RED}${BOLD}Cannot specify package manager${NC}"
+	exit 1
+fi
 
 echo "Package manager name: $PACKAGE_MANAGER"
 
@@ -127,9 +125,9 @@ echo -e "${YELLOW}Checking utilities${NC}\n"
 for utulity in "${required_utilities[@]}"; do
 	echo "utulity: $utulity"
 	if command -v $utulity  &> /dev/null; then
-		echo "$utulity downloaded"
+		echo -e "${GREEN}$utulity downloaded${NC}"
 	else
-		read -p "$utulity is not downloaded. Would you install $utulity? (Y/n): " response
+		read -p "$(printf "${RED}${utulity} is not downloaded. Would you install ${utulity}?${NC} (Y/n): ")"  response
 
 		case "$response" in
 			[yY][eE][sS] | [yY])
@@ -151,13 +149,12 @@ echo -e "${YELLOW}Creating temporary build directory in $TMP_DIR${NC}\n"
 mkdir -p $TMP_DIR
 
 #Configuring project
-echo "${CMAKE_ARGS[@]}"
 echo -e "${YELLOW}Configuring cmake${NC}\n"
 
 mkdir -p "$API_DIR/query"
 touch "$API_DIR/query/toolchains-v1"
 
-cmake -S $WORKING_DIRECTORY -B $TMP_DIR "${CMAKE_ARGS[@]}"
+cmake ${CMAKE_ARGS[@]} -B $TMP_DIR -S $WORKING_DIRECTORY
 
 #Building project
 
@@ -167,7 +164,7 @@ mkdir -p "${TMP_DIR}/libsim"
 
 cmake --build $TMP_DIR
 
-cmake --install $TMP_DIR --prefix "${TMP_DIR}/libsim"
+cmake --install $TMP_DIR --prefix "${TMP_DIR}/libsim" > /dev/null 2>&1
 
 REPLY_DIR="$API_DIR/reply"
 REPLY_FILE=$(ls $REPLY_DIR/toolchains-v1-*.json 2>/dev/null | head -n 1)
@@ -202,6 +199,6 @@ echo -e "${BOLD}${GREEN}Project is copied in ${WORKING_DIRECTORY}/tests${NC}\n"
 case "$BUILD_TESTS" in
 	"-b")
 		echo -e "${YELLOW}Building tests${NC}\n\n"
-		bash ./build_tests.sh
+		./build_tests.sh "../tests" "${CMAKE_ARGS[@]}"
 	;;
 esac
